@@ -1,3 +1,4 @@
+import logging
 import os
 
 import requests
@@ -5,6 +6,10 @@ import telegram
 
 from dotenv import load_dotenv
 from time import sleep
+
+
+console_out = logging.StreamHandler()
+logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s %(message)s")
 
 
 def send_tg_message(tg_token, chat_id, text):
@@ -34,11 +39,10 @@ def looking_for_completed_works(dev_token, tg_token, chat_id):
                         f"Преподавателю всё понравилось, можно приступать к следующему уроку!\n"
                         f"{work_data['new_attempts'][0]['lesson_url']}"
                     )
-            print(work_data)
         except requests.ReadTimeout:
             pass
         except requests.exceptions.ConnectionError:
-            print('Отсутствует подключение к интернету')
+            logging.warning('Отсутствует подключение к интернету')
             sleep(10)
 
 

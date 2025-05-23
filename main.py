@@ -19,21 +19,21 @@ def looking_for_completed_works(dev_token, tg_token, chat_id):
         try:
             response = requests.get('https://dvmn.org/api/long_polling/', headers=headers)
             response.raise_for_status()
-            response_json = response.json()
-            if response_json['status'] == 'found':
-                if response_json['new_attempts'][0]['is_negative']:
+            work_data = response.json()
+            if work_data['status'] == 'found':
+                if work_data['new_attempts'][0]['is_negative']:
                     send_tg_message(
                         tg_token, chat_id,
-                        f"У вас проверили работу \"{response_json['new_attempts'][0]['lesson_title']}\"\n\n"
+                        f"У вас проверили работу \"{work_data['new_attempts'][0]['lesson_title']}\"\n\n"
                         f"К сожалению, в работе нашлись ошибки.\n"
-                        f"{response_json['new_attempts'][0]['lesson_url']}"
+                        f"{work_data['new_attempts'][0]['lesson_url']}"
                     )
                 else:
                     send_tg_message(
                         tg_token, chat_id,
-                        f"У вас проверили работу \"{response_json['new_attempts'][0]['lesson_title']}\"\n\n"
+                        f"У вас проверили работу \"{work_data['new_attempts'][0]['lesson_title']}\"\n\n"
                         f"Преподавателю всё понравилось, можно приступать к следующему уроку!\n"
-                        f"{response_json['new_attempts'][0]['lesson_url']}"
+                        f"{work_data['new_attempts'][0]['lesson_url']}"
                     )
         except requests.ReadTimeout:
             print('Таймаут вышел')

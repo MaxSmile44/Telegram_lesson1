@@ -36,7 +36,7 @@ def looking_for_completed_works(dev_token, tg_token, chat_id):
                     )
             print(work_data)
         except requests.ReadTimeout:
-            print('Таймаут вышел')
+            pass
         except requests.exceptions.ConnectionError:
             print('Отсутствует подключение к интернету')
             sleep(10)

@@ -40,9 +40,6 @@ def looking_for_completed_works(dev_token, tg_token, chat_id):
         except requests.exceptions.ConnectionError:
             print('Отсутствует подключение к интернету')
             sleep(10)
-        except requests.exceptions.HTTPError as error:
-            print(error)
-            break
 
 
 def main():

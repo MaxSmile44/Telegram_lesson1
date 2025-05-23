@@ -1,4 +1,3 @@
-import argparse
 import os
 
 import requests
@@ -35,6 +34,7 @@ def looking_for_completed_works(dev_token, tg_token, chat_id):
                         f"Преподавателю всё понравилось, можно приступать к следующему уроку!\n"
                         f"{work_data['new_attempts'][0]['lesson_url']}"
                     )
+            print(work_data)
         except requests.ReadTimeout:
             print('Таймаут вышел')
         except requests.exceptions.ConnectionError:
@@ -46,14 +46,11 @@ def looking_for_completed_works(dev_token, tg_token, chat_id):
 
 
 def main():
-    parser = argparse.ArgumentParser(description='Укажите свой chat_id телеграма')
-    parser.add_argument('-c', '--chat_id', type=int, help='Ваш chat_id')
-    args = parser.parse_args()
-    chat_id = args.chat_id
     try:
         load_dotenv()
         dev_token = os.environ['DEVMAN_TOKEN']
         tg_token = os.environ['TG_TOKEN']
+        chat_id = os.environ['CHAT_ID']
     except KeyError as error:
         print(f'KeyError: {error}')
         raise SystemExit

@@ -9,7 +9,6 @@ from time import sleep
 
 
 console_out = logging.StreamHandler()
-logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s %(message)s")
 
 
 def send_tg_message(tg_token, chat_id, text):
@@ -47,6 +46,7 @@ def looking_for_completed_works(dev_token, tg_token, chat_id):
 
 
 def main():
+    logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s %(message)s")
     try:
         load_dotenv()
         dev_token = os.environ['DEVMAN_TOKEN']

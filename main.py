@@ -8,9 +8,6 @@ from dotenv import load_dotenv
 from time import sleep
 
 
-console_out = logging.StreamHandler()
-
-
 def send_tg_message(tg_token, chat_id, text):
     bot = telegram.Bot(token=tg_token)
     bot.send_message(chat_id=chat_id, text=text)

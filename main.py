@@ -1,11 +1,16 @@
 import logging
 import os
+import signal
+import sys
 
 import requests
 import telegram
 
 from dotenv import load_dotenv
 from time import sleep
+
+
+logger = logging.getLogger()
 
 
 class TelegramLogsHandler(logging.Handler):
@@ -19,7 +24,10 @@ class TelegramLogsHandler(logging.Handler):
         self.bot.send_message(chat_id=self.chat_id, text=log_entry)
 
 
-logger = logging.getLogger()
+def handle_signal(signum, frame):
+    logger = logging.getLogger(__name__)
+    logger.info(f'Получен сигнал {signum}. Завершение работы.')
+    sys.exit(0)
 
 
 def send_tg_message(tg_token, chat_id, text):
@@ -29,9 +37,9 @@ def send_tg_message(tg_token, chat_id, text):
 
 def looking_for_completed_works(dev_token, tg_token, chat_id):
     headers = {'Authorization': f'Token {dev_token}'}
+    logger.info('Бот запущен')
     while True:
         try:
-            logger.info('Бот запущен')
             response = requests.get('https://dvmn.org/api/long_polling/', headers=headers)
             response.raise_for_status()
             task_status = response.json()
@@ -73,6 +81,9 @@ def main():
     tg_handler = TelegramLogsHandler(tg_token, chat_id)
     tg_handler.setLevel(logging.INFO)
     logger.addHandler(tg_handler)
+
+    signal.signal(signal.SIGTERM, handle_signal)
+    signal.signal(signal.SIGINT, handle_signal)
 
     looking_for_completed_works(dev_token, tg_token, chat_id)
 
